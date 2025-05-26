@@ -247,18 +247,25 @@ header .launch-highlight p {
     color: #42301D;
 }
 
+.form-wrapper {
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Email form - desktop version */
 #subscribe-form {
     display: flex;
     justify-content: center;
-    max-width: 500px;
     margin: 0 auto;
+    max-width: 500px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
 }
 
 #subscribe-form input[type="email"] {
-    padding: 18px 20px;
+    padding: 15px 20px;
     font-size: 1rem;
     border: none;
     flex-grow: 1;
@@ -279,7 +286,7 @@ header .launch-highlight p {
 }
 
 #subscribe-form button {
-    padding: 18px 30px;
+    padding: 15px 25px;
     font-size: 0.95rem;
     background-color: #9e7b6a;
     color: white;
@@ -289,6 +296,7 @@ header .launch-highlight p {
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
+    white-space: nowrap;
 }
 
 #subscribe-form button:hover {
@@ -465,7 +473,7 @@ header .launch-highlight p {
 
 /* Footer */
 footer {
-    background-color: #3e2a1a; /* Darker brown footer to match the image */
+    background-color: #3e2a1a;
     color: #FDFBF7;
     padding: 40px 0 20px;
 }
@@ -490,6 +498,7 @@ footer {
     margin: 0;
     letter-spacing: 1px;
     font-weight: normal;
+    white-space: nowrap; /* Prevent brand name from wrapping */
 }
 
 .footer-brand p {
@@ -682,21 +691,35 @@ footer {
     
     /* Email form optimization */
     #subscribe-form {
-        flex-direction: column;
-        width: 100%;
+        display: flex;
+        flex-direction: row; /* Keep input and button on same line */
+        width: 90%;
+        max-width: 400px;
+        margin: 0 auto;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        border-radius: 8px;
+        overflow: hidden;
     }
     
     #subscribe-form input[type="email"] {
-        width: 100%;
-        border-radius: 5px;
-        margin-right: 0;
-        margin-bottom: 10px;
-        text-align: center;
+        flex: 1;
+        padding: 12px 15px;
+        border-radius: 8px 0 0 8px;
+        border: none;
+        margin: 0;
+        height: 48px;
+        font-size: 16px;
+        text-align: left;
+        box-shadow: none;
     }
     
     #subscribe-form button {
-        width: 100%;
-        border-radius: 5px;
+        padding: 12px 20px;
+        border-radius: 0 8px 8px 0;
+        height: 48px;
+        white-space: nowrap;
+        font-size: 14px;
+        min-width: 120px;
     }
     
     /* Footer mobile optimization */
@@ -749,6 +772,18 @@ footer {
     input, button, select, textarea {
         font-size: 16px; /* Prevents iOS zoom on focus */
     }
+    
+    /* Footer brand name fix */
+    .footer-brand h3 {
+        font-size: 1.5rem;
+        white-space: nowrap;
+    }
+    
+    /* Better spacing for email signup */
+    .email-signup {
+        width: 100%;
+        padding: 0 15px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -764,6 +799,7 @@ footer {
     #hero .launching-soon-text {
         font-size: 2.5rem;
         letter-spacing: 3px;
+        white-space: nowrap; /* Prevent wrapping */
     }
     
     .story-highlights, .preview-gallery {
@@ -776,6 +812,18 @@ footer {
     
     .footer-brand h3 {
         font-size: 1.5rem;
+    }
+    
+    /* Footer fixes for very small screens */
+    .footer-bottom {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    #subscribe-form button {
+        min-width: 100px;
+        padding: 12px 15px;
+        font-size: 13px;
     }
 }
 
