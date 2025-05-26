@@ -21,6 +21,28 @@ document.addEventListener('DOMContentLoaded', () => {
     let scrollTimer = null;
     const scrollThreshold = 10; // Minimum scroll distance before action
     
+    // Prevent horizontal scrolling on mobile
+    document.body.addEventListener('touchmove', function(e) {
+        if (e.touches.length > 1) {
+            e.preventDefault(); // Prevent pinch zoom causing horizontal scroll
+        }
+    }, { passive: false });
+    
+    // Fix for iOS 100vh issue
+    function setVhProperty() {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    
+    // Set the property on page load
+    setVhProperty();
+    
+    // Update the property on resize
+    window.addEventListener('resize', () => {
+        setVhProperty();
+        adjustForMobile();
+    });
+    
     // Handle scroll with debouncing for better mobile performance
     window.addEventListener('scroll', function() {
         if (scrollTimer !== null) {
@@ -93,11 +115,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Show success message instead of alert for better mobile experience
                 showFormMessage('Thank you for subscribing! We\'ll notify you at launch.', 'success');
                 emailInput.value = ''; // Clear the input
+                emailInput.blur(); // Hide keyboard on mobile
             } else {
                 // Show error message instead of alert
                 showFormMessage('Please enter a valid email address.', 'error');
             }
         });
+        
+        // Auto-focus/blur for better mobile experience
+        const emailInput = document.getElementById('email');
+        if (emailInput) {
+            emailInput.addEventListener('focus', function() {
+                // Scroll to make sure form is visible when keyboard appears
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: emailInput.getBoundingClientRect().top + window.pageYOffset - 150,
+                        behavior: 'smooth'
+                    });
+                }, 300);
+            });
+        }
     }
 
     function validateEmail(email) {
@@ -167,6 +204,31 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initial check for reveals in case elements are already in view on load
     revealElementsOnScroll();
+    
+    function adjustForMobile() {
+        const isMobile = window.innerWidth < 768;
+        
+        // Handle email form layout on smaller screens
+        if (window.innerWidth <= 480) {
+            if (subscribeForm) {
+                subscribeForm.classList.add('mobile-layout');
+            }
+        } else {
+            if (subscribeForm) {
+                subscribeForm.classList.remove('mobile-layout');
+            }
+        }
+        
+        // Adjust for mobile devices
+        if (isMobile) {
+            document.body.classList.add('is-mobile');
+        } else {
+            document.body.classList.remove('is-mobile');
+        }
+    }
+    
+    // Run mobile adjustments on load
+    adjustForMobile();
     
     // Mobile optimizations
     const isMobile = window.innerWidth < 768;
