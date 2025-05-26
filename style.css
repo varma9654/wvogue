@@ -7,6 +7,8 @@ body {
     color: #4A3B31; /* Dark brown text */
     line-height: 1.6;
     overflow-x: hidden; /* Prevent horizontal scroll */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .container {
@@ -14,6 +16,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px 0;
+    box-sizing: border-box;
 }
 
 h1, h2, h3 {
@@ -262,6 +265,7 @@ header .launch-highlight p {
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
+    width: 100%;
 }
 
 #subscribe-form input[type="email"] {
@@ -650,18 +654,21 @@ footer {
     .highlight-item, .gallery-item {
         flex-basis: 80%; /* Full width on smaller screens */
         margin-bottom: 30px;
+        width: 100%;
+        max-width: 450px;
     }
 }
 
 @media (max-width: 768px) {
     /* General mobile adjustments */
     .container {
-        width: 95%;
+        width: 90%;
         padding: 15px 0;
+        margin: 0 auto;
     }
     
     h1 {
-        font-size: 3rem;
+        font-size: 2.8rem;
     }
     
     /* Header mobile optimization */
@@ -672,28 +679,35 @@ footer {
     
     /* Hero section mobile optimization */
     #hero {
-        padding: 70px 15px 50px;
+        padding: 70px 10px 50px;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     #hero .launching-soon-text {
-        font-size: 3rem;
+        font-size: 2.8rem;
+        letter-spacing: 3px;
     }
     
     #hero .description {
         font-size: 1rem;
         padding: 0 10px;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .value-circles {
         flex-direction: column;
         gap: 30px;
+        width: 100%;
+        align-items: center;
     }
     
     /* Email form optimization */
     #subscribe-form {
         display: flex;
         flex-direction: row; /* Keep input and button on same line */
-        width: 90%;
+        width: 100%;
         max-width: 400px;
         margin: 0 auto;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -711,15 +725,18 @@ footer {
         font-size: 16px;
         text-align: left;
         box-shadow: none;
+        width: 60%;
+        min-width: 0; /* Allow input to shrink if needed */
     }
     
     #subscribe-form button {
-        padding: 12px 20px;
+        padding: 12px 15px;
         border-radius: 0 8px 8px 0;
         height: 48px;
         white-space: nowrap;
         font-size: 14px;
-        min-width: 120px;
+        min-width: 100px;
+        width: 40%;
     }
     
     /* Footer mobile optimization */
@@ -728,6 +745,8 @@ footer {
         gap: 25px;
         text-align: center;
         padding: 0 10px;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .footer-brand {
@@ -753,6 +772,7 @@ footer {
         display: flex;
         justify-content: center;
         gap: 15px;
+        flex-wrap: wrap;
     }
     
     /* Prevent text from being too small */
@@ -783,23 +803,33 @@ footer {
     .email-signup {
         width: 100%;
         padding: 0 15px;
+        box-sizing: border-box;
+    }
+    
+    .form-wrapper {
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 10px;
+        box-sizing: border-box;
     }
 }
 
 @media (max-width: 480px) {
     /* Even smaller screens */
     h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+        padding: 0 10px;
     }
     
     .logo-main img {
-        width: 180px;
+        width: 160px;
     }
     
     #hero .launching-soon-text {
-        font-size: 2.5rem;
-        letter-spacing: 3px;
-        white-space: nowrap; /* Prevent wrapping */
+        font-size: 2.2rem;
+        letter-spacing: 2px;
+        white-space: normal; /* Allow wrapping on very small screens */
+        padding: 0 5px;
     }
     
     .story-highlights, .preview-gallery {
@@ -820,8 +850,20 @@ footer {
         gap: 10px;
     }
     
+    #subscribe-form {
+        flex-direction: column;
+        border-radius: 8px;
+    }
+    
+    #subscribe-form input[type="email"] {
+        width: 100%;
+        border-radius: 8px 8px 0 0;
+        text-align: center;
+    }
+    
     #subscribe-form button {
-        min-width: 100px;
+        width: 100%;
+        border-radius: 0 0 8px 8px;
         padding: 12px 15px;
         font-size: 13px;
     }
@@ -919,4 +961,125 @@ html {
 /* Header hide/show classes */
 header.header-hidden {
     transform: translateY(-100%);
+}
+
+/* Additional Mobile Fixes */
+* {
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Fix iOS touch delay */
+@media (hover: none) {
+    a, button, input[type="submit"] {
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .touch-active {
+        opacity: 0.7;
+    }
+}
+
+@media (max-width: 380px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    #hero .launching-soon-text {
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+    }
+    
+    .value-circle span {
+        font-size: 0.65rem;
+    }
+    
+    #hero .description {
+        font-size: 0.9rem;
+    }
+    
+    .footer-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .footer-links span {
+        display: none;
+    }
+    
+    .container {
+        width: 95%;
+        padding: 10px 0;
+    }
+}
+
+/* Fix for double form definition issue */
+#subscribe-form {
+    display: flex;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    #hero .tagline {
+        font-size: 1.3rem;
+        margin: 0.8rem auto 2rem;
+        max-width: 90%;
+    }
+    
+    #hero {
+        min-height: auto;
+        padding-top: 100px;
+    }
+}
+
+/* Mobile-specific styles */
+.is-mobile .container {
+    width: 95%;
+    max-width: none;
+}
+
+.is-mobile #hero {
+    min-height: calc(var(--vh, 1vh) * 100);
+    padding-top: 90px;
+    padding-bottom: 30px;
+}
+
+.mobile-layout {
+    flex-direction: column !important;
+}
+
+.mobile-layout input[type="email"] {
+    width: 100% !important;
+    border-radius: 8px 8px 0 0 !important;
+    text-align: center !important;
+}
+
+.mobile-layout button {
+    width: 100% !important;
+    border-radius: 0 0 8px 8px !important;
+}
+
+/* Prevent overflow issues on all devices */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+/* Ensure page doesn't shift when focusing on inputs */
+@media (max-width: 768px) {
+    input[type="email"]:focus {
+        position: relative;
+        z-index: 1;
+    }
 } 
