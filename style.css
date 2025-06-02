@@ -928,29 +928,156 @@ html {
 
 /* Form message styling */
 .form-message {
-    padding: 12px 15px;
-    margin: 15px auto 0;
-    border-radius: 5px;
-    font-size: 0.9rem;
+    padding: 16px 24px;
+    margin: 20px auto 0;
+    border-radius: 8px;
+    font-size: 1rem;
     max-width: 500px;
     text-align: center;
-    transition: opacity 0.5s ease;
+    transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+    opacity: 0;
+    transform: translateY(-15px);
+    animation: messageAppear 0.7s forwards;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 0.3px;
+    position: relative;
+    overflow: hidden;
 }
 
+.form-message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        rgba(255,255,255,0) 0%, 
+        rgba(255,255,255,0.3) 50%, 
+        rgba(255,255,255,0) 100%);
+    animation: shimmer 2.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes messageAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    30% {
+        opacity: 1;
+        transform: translateY(5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pulsating border animation for success message */
 .form-message.success {
-    background-color: rgba(76, 175, 80, 0.1);
-    color: #4CAF50;
-    border: 1px solid #4CAF50;
+    background-color: rgba(130, 200, 130, 0.05);
+    color: #2e7d32;
+    border: 1px solid rgba(176, 141, 87, 0.3);
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.05),
+        0 0 0 1px rgba(176, 141, 87, 0.1);
+    animation: messageAppear 0.7s forwards, borderPulse 3s infinite alternate;
+}
+
+@keyframes borderPulse {
+    0% {
+        border-color: rgba(176, 141, 87, 0.2);
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.05),
+            0 0 0 1px rgba(176, 141, 87, 0.1);
+    }
+    100% {
+        border-color: rgba(176, 141, 87, 0.4);
+        box-shadow: 
+            0 4px 15px rgba(0, 0, 0, 0.05),
+            0 0 0 1px rgba(176, 141, 87, 0.3);
+    }
+}
+
+/* Enhanced icon pulse for success */
+.form-message.success .message-icon svg {
+    stroke: #B08D57;
+    stroke-width: 2;
+    animation: iconSuccessPulse 2s infinite alternate;
+}
+
+@keyframes iconSuccessPulse {
+    0% {
+        transform: scale(1);
+        stroke-width: 2;
+    }
+    100% {
+        transform: scale(1.1);
+        stroke-width: 2.2;
+    }
+}
+
+/* Icon styles */
+.message-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+}
+
+.message-text {
+    font-weight: 500;
+}
+
+.form-message.info {
+    background-color: rgba(33, 150, 243, 0.08);
+    color: #0d47a1;
+    border: 1px solid rgba(33, 150, 243, 0.2);
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.5));
 }
 
 .form-message.error {
-    background-color: rgba(244, 67, 54, 0.1);
-    color: #F44336;
-    border: 1px solid #F44336;
+    background-color: rgba(244, 67, 54, 0.08);
+    color: #c62828;
+    border: 1px solid rgba(244, 67, 54, 0.2);
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.5));
 }
 
 .form-message.fade-out {
     opacity: 0;
+    transform: translateY(-15px);
+    transition-duration: 0.4s;
+}
+
+.form-message svg {
+    margin-right: 10px;
+    animation: iconPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 /* Touch feedback for mobile */
