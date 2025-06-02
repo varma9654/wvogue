@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Initialize Supabase client
+    const supabaseUrl = 'https://mdymyqukqpkstjjnpepv.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1keW15cXVrcXBrc3Rqam5wZXB2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2Nzg3NDEsImV4cCI6MjA2NDI1NDc0MX0.AxGvZ9Ykn4A5FX6YhRa3ZHMubYuvM60p3COvY2Wb9mA';
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -106,18 +111,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // Email Subscription Form Handling with improved mobile validation
     const subscribeForm = document.getElementById('subscribe-form');
     if (subscribeForm) {
-        subscribeForm.addEventListener('submit', function(e) {
+        subscribeForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             const emailInput = document.getElementById('email');
             const email = emailInput.value;
 
             if (validateEmail(email)) {
-                // Show success message instead of alert for better mobile experience
-                showFormMessage('Thank you for subscribing! We\'ll notify you at launch.', 'success');
-                emailInput.value = ''; // Clear the input
-                emailInput.blur(); // Hide keyboard on mobile
+                try {
+                    // Save email to Supabase
+                    const { data, error } = await supabaseClient
+                        .from('subscribers')
+                        .insert([{ 
+                            email: email, 
+                            subscribed_at: new Date().toISOString() 
+                        }]);
+                    
+                    if (error) {
+                        console.error('Supabase error:', error);
+                        
+                        // Handle specific errors
+                        if (error.code === '23505') {
+                            // Unique violation (email already exists)
+                            showFormMessage('You\'re already subscribed with this email!', 'info');
+                        } else {
+                            throw error;
+                        }
+                    } else {
+                        // Show success message
+                        showFormMessage('Thank you for subscribing! We\'ll notify you at launch.', 'success');
+                        emailInput.value = ''; // Clear the input
+                        emailInput.blur(); // Hide keyboard on mobile
+                    }
+                } catch (error) {
+                    console.error('Error saving to Supabase:', error);
+                    showFormMessage('Subscription failed. Please try again later.', 'error');
+                }
             } else {
-                // Show error message instead of alert
+                // Show error message
                 showFormMessage('Please enter a valid email address.', 'error');
             }
         });
@@ -147,21 +177,69 @@ document.addEventListener('DOMContentLoaded', () => {
         // Remove any existing message
         const existingMessage = document.querySelector('.form-message');
         if (existingMessage) {
-            existingMessage.remove();
+            existingMessage.classList.add('fade-out');
+            setTimeout(() => existingMessage.remove(), 300);
+            // Wait a brief moment before showing the new message
+            setTimeout(() => createNewMessage(message, type), 350);
+        } else {
+            createNewMessage(message, type);
         }
-
-        const messageElement = document.createElement('div');
-        messageElement.className = `form-message ${type}`;
-        messageElement.textContent = message;
         
-        // Insert after the form
-        subscribeForm.insertAdjacentElement('afterend', messageElement);
-        
-        // Auto remove message after 4 seconds
-        setTimeout(() => {
-            messageElement.classList.add('fade-out');
-            setTimeout(() => messageElement.remove(), 500);
-        }, 4000);
+        function createNewMessage(message, type) {
+            const messageElement = document.createElement('div');
+            messageElement.className = `form-message ${type}`;
+            
+            // Add appropriate icon based on message type
+            let iconSvg = '';
+            if (type === 'success') {
+                iconSvg = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M8 12l2 2 6-6"></path>
+                    </svg>
+                `;
+            } else if (type === 'info') {
+                iconSvg = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                `;
+            } else if (type === 'error') {
+                iconSvg = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                `;
+            }
+            
+            // Create icon element
+            const iconElement = document.createElement('span');
+            iconElement.className = 'message-icon';
+            iconElement.innerHTML = iconSvg;
+            messageElement.appendChild(iconElement);
+            
+            // Create text element
+            const textElement = document.createElement('span');
+            textElement.className = 'message-text';
+            textElement.textContent = message;
+            messageElement.appendChild(textElement);
+            
+            // Insert after the form
+            subscribeForm.insertAdjacentElement('afterend', messageElement);
+            
+            // Ensure animation runs by forcing a reflow
+            messageElement.offsetHeight;
+            
+            // Auto remove message after a delay
+            setTimeout(() => {
+                messageElement.classList.add('fade-out');
+                setTimeout(() => messageElement.remove(), 500);
+            }, 20000);
+        }
     }
 
     // On-scroll reveal animations - optimized for mobile
